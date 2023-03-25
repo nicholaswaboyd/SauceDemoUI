@@ -11,6 +11,7 @@ const password = "sW@bnZGzcg$7Z_U"
 test.beforeEach(async ({ page }) => {
     const homepage = new HomePage(page);
     const loginpage = new LoginPage(page);
+    const dashboard = new Dashboard(page);
     //Navigate to Hudl
     await page.goto('https://www.hudl.com/');
     //Click the login dropdown
@@ -30,11 +31,28 @@ test.describe('Login Tests', () => {
         //Fill the email and password fields using the constants on lines 7/8
         await loginpage.fillEmailAddress(emailaddress);
         await loginpage.fillPassword(password);
+        await expect(loginpage.checkboxRememberMe).not.toBeChecked();
         await loginpage.buttonLogin.click();
         //Check that the user has succesfully logged in
         await expect(dashboard.linkNewcastleJetsFC).toBeVisible();
 
     });
 
-    
+    test('Check Remember Me can be toggled', async ({page}) =>{
+        const loginpage = new LoginPage(page);
+        const dashboard = new Dashboard(page);
+
+        //Fill email and password again
+        await loginpage.fillEmailAddress(emailaddress);
+        await loginpage.fillPassword(password);
+        //Verify the checkbox is unchecked
+        await expect(loginpage.checkboxRememberMe).not.toBeChecked();
+        //Needs force:true as another element loads over the checkbox on hover
+        await loginpage.checkboxRememberMe.click({ force:true });
+        //Re-check after clicking it
+        await expect(loginpage.checkboxRememberMe).toBeChecked();
+        await loginpage.buttonLogin.click();
+        //Check that the user has succesfully logged in
+        await expect(dashboard.linkNewcastleJetsFC).toBeVisible();
+    })
 });
