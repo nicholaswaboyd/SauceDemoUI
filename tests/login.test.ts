@@ -67,4 +67,9 @@ test.describe('Login Tests', () => {
         //Verify the Log In button is disabled
         await expect(loginpage.buttonLogin).toBeDisabled();
     })
+
+    //TBD
+    //test incorrect password
+    //test organization login screen is available
+    //test help button
 });
