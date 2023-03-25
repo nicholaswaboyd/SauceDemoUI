@@ -4,7 +4,7 @@ import HomePage from '../pages/homepage';
 import LoginPage from '../pages/loginpage';
 
 //Constants to be used during test cases. Will investigate not storing test password in plaintext
-const emailaddress = "nicholaswaboyd@gmail.com"
+const emailAddress = "nicholaswaboyd@gmail.com"
 const password = "sW@bnZGzcg$7Z_U"
 
 //The following is carried out before each test case in this file
@@ -29,7 +29,7 @@ test.describe('Login Tests', () => {
         const dashboard = new Dashboard(page);
 
         //Fill the email and password fields using the constants on lines 7/8
-        await loginpage.fillEmailAddress(emailaddress);
+        await loginpage.fillEmailAddress(emailAddress);
         await loginpage.fillPassword(password);
         await expect(loginpage.checkboxRememberMe).not.toBeChecked();
         await loginpage.buttonLogin.click();
@@ -43,7 +43,7 @@ test.describe('Login Tests', () => {
         const dashboard = new Dashboard(page);
 
         //Fill email and password again
-        await loginpage.fillEmailAddress(emailaddress);
+        await loginpage.fillEmailAddress(emailAddress);
         await loginpage.fillPassword(password);
         //Verify the checkbox is unchecked
         await expect(loginpage.checkboxRememberMe).not.toBeChecked();
@@ -54,5 +54,17 @@ test.describe('Login Tests', () => {
         await loginpage.buttonLogin.click();
         //Check that the user has succesfully logged in
         await expect(dashboard.linkNewcastleJetsFC).toBeVisible();
+    })
+
+    test('Verify an error is displayed when no password is entered', async ({page}) =>{
+        const loginpage = new LoginPage(page);
+        
+        //Fill only the email address
+        await loginpage.fillEmailAddress(emailAddress);
+        await loginpage.buttonLogin.click();
+        //Verify the error message has appeared
+        await expect(loginpage.errorUnknownEmailOrPassword).toBeVisible();
+        //Verify the Log In button is disabled
+        await expect(loginpage.buttonLogin).toBeDisabled();
     })
 });
