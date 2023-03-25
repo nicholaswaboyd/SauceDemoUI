@@ -1,0 +1,40 @@
+# Playwright Automation Suite using TypeScript in VSCode
+
+This is a Playwright automation suite written in TypeScript, designed to be used in VSCode. The suite is intended to provide a starting point for automating web applications with Playwright using TypeScript.
+
+## Prerequisites
+
+Before you can use this automation suite, you need to have the following tools installed:
+
+-   [Node.js](https://nodejs.org/)
+-   [npm](https://www.npmjs.com/)
+-   [VSCode](https://code.visualstudio.com/)
+
+## Getting Started
+
+To get started with the automation suite, follow these steps:
+
+1.  Clone the repository:
+ 
+    `git clone https://github.com/your-username/playwright-automation-suite.git` 
+    
+2.  Install dependencies:
+    
+    `npm install` 
+    
+3.  Run the tests:
+    
+    `npm test` 
+    
+    This will run the example tests included in the `tests` directory.
+    
+4.  Start writing your own tests by creating new files in the `tests` directory. You can use the example tests as a starting point.
+
+## Playwright Configuration
+
+The Playwright configuration is located in the `config` directory in the `playwright.config.ts` file. You can modify this file to configure the browser to use, the viewport size, and other options.
+
+## Conclusion
+
+That's it! You now have a Playwright automation suite that you can use to write tests for your web applications. If you have any questions or issues, please open an issue on the GitHub repository.
+> Written with [StackEdit](https://stackedit.io/).
