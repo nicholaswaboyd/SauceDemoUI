@@ -6,27 +6,30 @@ import LoginPage from '../pages/loginpage';
 //Constants to be used during test cases. Will investigate not storing test password in plaintext
 const emailAddress = "nicholaswaboyd@gmail.com"
 const password = "sW@bnZGzcg$7Z_U"
+const pageUrl = "https://www.hudl.com/"
 
-//The following is carried out before each test case in this file
-test.beforeEach(async ({ page }) => {
-    const homepage = new HomePage(page);
-    const loginpage = new LoginPage(page);
-    //Navigate to Hudl
-    await page.goto('https://www.hudl.com/');
-    //Click the login dropdown
-    await homepage.clickDropdownLogin();
-    //Select Hudl from the available options
-    await homepage.clickButtonLoginHudl();
-    //Check the client has navigated to the correct page and the login button is visible
-    await expect(loginpage.buttonLogin).toBeVisible();
-});
+let homepage: HomePage
+let loginpage: LoginPage
+let dashboard: Dashboard
 
 test.describe('Login Tests', () => {
 
-    test('Verify Happy Path Login', async ({page}) =>{
-        const loginpage = new LoginPage(page);
-        const dashboard = new Dashboard(page);
+    //The following is carried out before each test case in this file
+    test.beforeEach(async ({ page }) => {
+        homepage = new HomePage(page);
+        loginpage = new LoginPage(page);
+        dashboard = new Dashboard(page);
+        //Navigate to Hudl
+        await page.goto(pageUrl);
+        //Click the login dropdown
+        await homepage.clickDropdownLogin();
+        //Select Hudl from the available options
+        await homepage.clickButtonLoginHudl();
+        //Check the client has navigated to the correct page and the login button is visible
+        await expect(loginpage.buttonLogin).toBeVisible();
+    });
 
+    test('Verify Happy Path Login', async () =>{
         //Fill the email and password fields using the constants on lines 7/8
         await loginpage.fillEmailAddress(emailAddress);
         await loginpage.fillPassword(password);
@@ -37,10 +40,7 @@ test.describe('Login Tests', () => {
 
     });
 
-    test('Check Remember Me can be toggled', async ({page}) =>{
-        const loginpage = new LoginPage(page);
-        const dashboard = new Dashboard(page);
-
+    test('Check Remember Me can be toggled', async () =>{
         //Fill email and password again
         await loginpage.fillEmailAddress(emailAddress);
         await loginpage.fillPassword(password);
@@ -56,8 +56,6 @@ test.describe('Login Tests', () => {
     })
 
     test('Verify an error is displayed when no password is entered', async ({page}) =>{
-        const loginpage = new LoginPage(page);
-        
         //Fill only the email address
         await loginpage.fillEmailAddress(emailAddress);
         await loginpage.buttonLogin.click();
