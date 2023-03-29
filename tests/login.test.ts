@@ -11,7 +11,6 @@ const password = "sW@bnZGzcg$7Z_U"
 test.beforeEach(async ({ page }) => {
     const homepage = new HomePage(page);
     const loginpage = new LoginPage(page);
-    const dashboard = new Dashboard(page);
     //Navigate to Hudl
     await page.goto('https://www.hudl.com/');
     //Click the login dropdown
