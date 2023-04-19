@@ -1,4 +1,4 @@
-# Hudl Regression Suite using Playwright/TypeScript in VSCode
+# SauceDemo Regression Suite using Playwright/TypeScript in VSCode
 
 This is a Playwright automation suite written in TypeScript, designed to be used in VSCode.
 
@@ -38,9 +38,5 @@ To get started with the automation suite, follow these steps:
 ## Playwright Configuration
 
 The Playwright configuration is located in the `config` directory in the `playwright.config.ts` file. You can modify this file to configure the browser to use, the viewport size, and other options.
-
-## Conclusion
-
-That's it! You now have a Playwright automation suite that you can use to write tests for your web applications. If you have any questions or issues, please open an issue on the GitHub repository.
 
 > Written with [StackEdit](https://stackedit.io/).

@@ -1,72 +1,71 @@
 import { test, expect, Page } from '@playwright/test';
-import Dashboard from '../pages/dashboard';
-import HomePage from '../pages/homepage';
 import LoginPage from '../pages/loginpage';
+import InventoryPage from '../pages/inventorypage';
+import YourCartPage from '../pages/yourcartpage';
+import CheckoutYourInformationPage from '../pages/checkoutyourinformationpage';
+import CheckoutOverviewPage from '../pages/checkoutoverviewpage';
 
 //Constants to be used during test cases. Will investigate not storing test password in plaintext
-const emailAddress = "nicholaswaboyd@gmail.com"
-const password = "sW@bnZGzcg$7Z_U"
-const pageUrl = "https://www.hudl.com/"
+const validUsername = "standard_user"
+const password = "secret_sauce"
+const firstName = "Automation"
+const lastName = "Tester"
+const postalCode = "OX44DQ"
+const pageUrl = "https://www.saucedemo.com/"
 
-let homepage: HomePage
 let loginpage: LoginPage
-let dashboard: Dashboard
+let inventorypage: InventoryPage
+let yourcartpage: YourCartPage
+let checkoutyourinformationpage: CheckoutYourInformationPage
+let checkoutoverviewpage: CheckoutOverviewPage
 
 test.describe('Login Tests', () => {
 
     //The following is carried out before each test case in this file
     test.beforeEach(async ({ page }) => {
-        homepage = new HomePage(page);
         loginpage = new LoginPage(page);
-        dashboard = new Dashboard(page);
-        //Navigate to Hudl
+        inventorypage = new InventoryPage(page);
+        yourcartpage = new YourCartPage(page);
+        checkoutyourinformationpage = new CheckoutYourInformationPage(page);
+        checkoutoverviewpage = new CheckoutOverviewPage(page);
+        //Navigate to SauceDemo
         await page.goto(pageUrl);
-        //Click the login dropdown
-        await homepage.clickDropdownLogin();
-        //Select Hudl from the available options
-        await homepage.clickButtonLoginHudl();
-        //Check the client has navigated to the correct page and the login button is visible
-        await expect(loginpage.buttonLogin).toBeVisible();
+        
+
     });
 
-    test('Verify Happy Path Login', async () =>{
+    test('Verify Happy Path Login', async ({page}) =>{
         //Fill the email and password fields using the constants on lines 7/8
-        await loginpage.fillEmailAddress(emailAddress);
-        await loginpage.fillPassword(password);
-        await expect(loginpage.checkboxRememberMe).not.toBeChecked();
+        await loginpage.usernameField.fill(validUsername);
+        await loginpage.passwordField.fill(password);
+        //Click login button
         await loginpage.buttonLogin.click();
-        //Check that the user has succesfully logged in
-        await expect(dashboard.linkNewcastleJetsFC).toBeVisible();
-
+        //Verify inventory page has loaded
+        await expect(inventorypage.pageTitle).toBeVisible();
+        //Add backpack to cart
+        await inventorypage.buttonAddToCartBackpack.click();
+        //Open cart
+        await inventorypage.buttonShoppingCart.click();
+        //Verify the cart page has opened
+        await expect(yourcartpage.pageTitle).toBeVisible();
+        //Click checkout
+        await yourcartpage.buttonCheckout.click();
+        //Verify page has opened
+        await expect(checkoutyourinformationpage.pageTitle).toBeVisible();
+        //Fill fields
+        await checkoutyourinformationpage.firstNameField.fill(firstName);
+        await checkoutyourinformationpage.lastNameField.fill(lastName);
+        await checkoutyourinformationpage.postalCodeField.fill(postalCode);
+        //Click continue
+        await checkoutyourinformationpage.buttonContinue.click();
+        //Check page has opened
+        await expect(checkoutoverviewpage.pageTitle).toBeVisible();
+        //Extract item total and tax for comparison
+        const itemTotalValue = await checkoutoverviewpage.extractItemTotalValue();
+        const taxValue = await checkoutoverviewpage.extractTaxValue();
+        const totalValue = await checkoutoverviewpage.extractTotalValue();
+        expect(itemTotalValue + taxValue).toEqual(totalValue);
+        page.close();
     });
 
-    test('Check Remember Me can be toggled', async () =>{
-        //Fill email and password again
-        await loginpage.fillEmailAddress(emailAddress);
-        await loginpage.fillPassword(password);
-        //Verify the checkbox is unchecked
-        await expect(loginpage.checkboxRememberMe).not.toBeChecked();
-        //Needs force:true as another element loads over the checkbox on hover
-        await loginpage.checkboxRememberMe.click({ force:true });
-        //Re-check after clicking it
-        await expect(loginpage.checkboxRememberMe).toBeChecked();
-        await loginpage.buttonLogin.click();
-        //Check that the user has succesfully logged in
-        await expect(dashboard.linkNewcastleJetsFC).toBeVisible();
-    })
-
-    test('Verify an error is displayed when no password is entered', async ({page}) =>{
-        //Fill only the email address
-        await loginpage.fillEmailAddress(emailAddress);
-        await loginpage.buttonLogin.click();
-        //Verify the error message has appeared
-        await expect(loginpage.errorUnknownEmailOrPassword).toBeVisible();
-        //Verify the Log In button is disabled
-        await expect(loginpage.buttonLogin).toBeDisabled();
-    })
-
-    //TBD
-    //test incorrect password
-    //test organization login screen is available
-    //test help button
 });
